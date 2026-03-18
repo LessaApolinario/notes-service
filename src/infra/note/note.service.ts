@@ -23,6 +23,10 @@ export class NoteService extends NoteUseCase {
     return this.noteAdapter.findById(id);
   }
 
+  findByTitle(title: string): Promise<Note | null> {
+    return this.noteAdapter.findByTitle(title);
+  }
+
   update(note: UpdateNoteRequest): Promise<Note> {
     return this.noteAdapter.update(note);
   }

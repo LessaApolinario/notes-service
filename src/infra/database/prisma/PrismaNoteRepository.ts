@@ -44,6 +44,16 @@ export class PrismaNoteRepository extends NoteAdapter {
     return foundNote ? PrismaNoteMapper.toDomain(foundNote) : null;
   }
 
+  async findByTitle(title: string): Promise<Note | null> {
+    const foundNote = await this.prismaService.note.findUnique({
+      where: {
+        title,
+      },
+    });
+
+    return foundNote ? PrismaNoteMapper.toDomain(foundNote) : null;
+  }
+
   async update(note: UpdateNoteRequest): Promise<Note> {
     const updatedNote = await this.prismaService.note.update({
       where: {

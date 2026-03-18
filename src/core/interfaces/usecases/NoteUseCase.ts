@@ -6,6 +6,7 @@ export abstract class NoteUseCase {
   abstract create(note: CreateNoteRequest): Promise<Note>;
   abstract fetchByUserId(userId: string): Promise<Note[]>;
   abstract findById(id: string): Promise<Note | null>;
+  abstract findByTitle(title: string): Promise<Note | null>;
   abstract update(note: UpdateNoteRequest): Promise<Note>;
   abstract remove(id: string): Promise<void>;
 }
