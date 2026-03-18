@@ -8,8 +8,8 @@ export class PrismaNoteMapper {
       title: note.title,
       description: note.description,
       userId: note.userId,
-      createdAt: note.createdAt.toDateString(),
-      updatedAt: note.updatedAt.toDateString(),
+      createdAt: note.createdAt.toLocaleString(),
+      updatedAt: note.updatedAt.toLocaleString(),
     };
   }
 }
