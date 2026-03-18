@@ -7,19 +7,38 @@ import {
   HttpCode,
   NotFoundException,
   Param,
+  Patch,
   Post,
+  UsePipes,
 } from '@nestjs/common';
-import { type CreateNoteRequest } from 'src/core/@types/http/request/CreateNoteRequest';
-import { type UpdateNoteRequest } from 'src/core/@types/http/request/UpdateNoteRequest';
 import { NoteUseCase } from 'src/core/interfaces/usecases/NoteUseCase';
+import { z } from 'zod';
+import { ZodValidationPipe } from '../pipes/ZodValidationPipe';
+
+const createNoteRequestBodySchema = z.object({
+  title: z.string(),
+  description: z.string(),
+  userId: z.string(),
+});
+
+type CreateNoteRequestBody = z.infer<typeof createNoteRequestBodySchema>;
+
+const updateNoteRequestBodySchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  description: z.string(),
+});
+
+type UpdateNoteRequestBody = z.infer<typeof updateNoteRequestBodySchema>;
 
 @Controller('/notes')
 export class NoteController {
   constructor(private noteUseCase: NoteUseCase) {}
 
-  @Post('/:user_id')
+  @Post('/create')
   @HttpCode(201)
-  async createNote(@Body() note: CreateNoteRequest) {
+  @UsePipes(new ZodValidationPipe(createNoteRequestBodySchema))
+  async createNote(@Body() note: CreateNoteRequestBody) {
     const foundUser = await this.noteUseCase.findByTitle(note.title);
 
     if (foundUser) {
@@ -29,7 +48,7 @@ export class NoteController {
     return await this.noteUseCase.create(note);
   }
 
-  @Get('/:user_id')
+  @Get('/user/:user_id')
   @HttpCode(200)
   async fetchNotesByUserId(@Param('user_id') userId: string) {
     return await this.noteUseCase.fetchByUserId(userId);
@@ -47,9 +66,10 @@ export class NoteController {
     return foundNote;
   }
 
-  @Post('/:id')
+  @Patch('/update')
   @HttpCode(200)
-  async updateNote(@Body() note: UpdateNoteRequest) {
+  @UsePipes(new ZodValidationPipe(updateNoteRequestBodySchema))
+  async updateNote(@Body() note: UpdateNoteRequestBody) {
     const foundNote = await this.noteUseCase.findById(note.id);
 
     if (!foundNote) {
@@ -59,7 +79,7 @@ export class NoteController {
     return await this.noteUseCase.update(note);
   }
 
-  @Delete('/:id')
+  @Delete('/remove/:id')
   @HttpCode(204)
   async removeNote(@Param('id') id: string) {
     const foundNote = await this.noteUseCase.findById(id);

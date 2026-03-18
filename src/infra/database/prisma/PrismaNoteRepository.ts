@@ -62,6 +62,7 @@ export class PrismaNoteRepository extends NoteAdapter {
       data: {
         title: note.title,
         description: note.description,
+        updatedAt: new Date(),
       },
     });
 
