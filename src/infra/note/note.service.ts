@@ -19,7 +19,7 @@ export class NoteService extends NoteUseCase {
     return this.noteAdapter.fetchByUserId(userId);
   }
 
-  findById(id: string): Promise<Note> {
+  findById(id: string): Promise<Note | null> {
     return this.noteAdapter.findById(id);
   }
 

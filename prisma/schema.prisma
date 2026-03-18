@@ -13,7 +13,7 @@ datasource db {
 
 model Note {
   id          String   @id @default(uuid())
-  title       String
+  title       String   @unique
   description String
   userId      String   @map("user_id")
   createdAt   DateTime @default(now()) @map("created_at")
