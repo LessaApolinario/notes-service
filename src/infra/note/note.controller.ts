@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   ConflictException,
   Controller,
@@ -51,12 +52,20 @@ export class NoteController {
   @Get('/user/:user_id')
   @HttpCode(200)
   async fetchNotesByUserId(@Param('user_id') userId: string) {
+    if (!userId) {
+      throw new BadRequestException('user_id is required');
+    }
+
     return await this.noteUseCase.fetchByUserId(userId);
   }
 
   @Get('/:id')
   @HttpCode(200)
   async fetchNoteById(@Param('id') id: string) {
+    if (!id) {
+      throw new BadRequestException('id is required');
+    }
+
     const foundNote = await this.noteUseCase.findById(id);
 
     if (!foundNote) {
@@ -82,6 +91,10 @@ export class NoteController {
   @Delete('/remove/:id')
   @HttpCode(204)
   async removeNote(@Param('id') id: string) {
+    if (!id) {
+      throw new BadRequestException('id is required');
+    }
+
     const foundNote = await this.noteUseCase.findById(id);
 
     if (!foundNote) {
