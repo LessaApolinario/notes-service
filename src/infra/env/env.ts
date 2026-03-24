@@ -6,7 +6,7 @@ export const envSchema = z.object({
   POSTGRES_PASSWORD: z.string(),
   POSTGRES_DB: z.string(),
   POSTGRES_HOST_PORT: z.coerce.number(),
-  PORT: z.coerce.number().optional().default(3333),
+  PORT: z.coerce.number().optional().default(3000),
 });
 
 export type Env = z.infer<typeof envSchema>;
