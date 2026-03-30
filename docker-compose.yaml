@@ -1,18 +1,8 @@
 services:
-  notes-service-backend-database:
-    image: postgres:17-alpine
-    restart: always
-    container_name: notes-service-backend-database
-    ports:
-      - "${POSTGRES_HOST_PORT:-7401}:5432"
-    env_file:
-      - .env
-    volumes:
-      - ./data/pg:/var/lib/postgresql/data
-    networks:
-      - notes-bff-network
   notes-service-backend:
-    build: .
+    build:
+      context: .
+      dockerfile: .docker/Dockerfile.main
     container_name: notes-service-backend
     restart: always
     ports:
@@ -22,8 +12,26 @@ services:
     env_file:
       - .env
     networks:
+      - notes-service-network
       - notes-bff-network
 
+  notes-service-backend-database:
+    image: postgres:17-alpine
+    restart: always
+    container_name: notes-service-backend-database
+    ports:
+      - "${POSTGRES_HOST_PORT:-7401}:5432"
+    env_file:
+      - .env
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - notes-service-network
+
+volumes:
+  pg_data:
+
 networks:
+  notes-service-network:
   notes-bff-network:
     external: true
