@@ -6,7 +6,7 @@ services:
     container_name: notes-service-backend
     restart: always
     ports:
-      - "1926:${PORT-3000}"
+      - "${PORT:-3000}:${PORT:-3000}"
     depends_on:
       - notes-service-backend-database
     env_file:
